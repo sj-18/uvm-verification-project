@@ -4,7 +4,7 @@ This repository contains an ongoing SystemVerilog UVM verification
 environment developed as part of structured learning and upskilling.
 
 The DUT is an aligner module that uses a standard AMBA 3 APB for register access. It has one Rx and one Tx interface which both use a custom valid/ready kind of protocol.
-The DUT design file used is provided in the course [Design Verification with SystemVerilog & UVM](https://www.udemy.com/course/design-verification-with-systemverilog-uvm/?couponCode=ACCAGE0923). The EDA playground link has the latest UVM testbench code that can be used for simulation and waveform observation.
+The DUT design file used is provided in the course [Design Verification with SystemVerilog & UVM](https://www.udemy.com/course/design-verification-with-systemverilog-uvm/?couponCode=ACCAGE0923) and has hidden bugs. The EDA playground link has the latest UVM testbench code that can be used for simulation and waveform observation.
 
 **EDA Playground link**: https://edaplayground.com/x/SGa6
 
