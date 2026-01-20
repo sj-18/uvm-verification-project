@@ -7,13 +7,20 @@ The DUT used is provided in the course [Design Verification with SystemVerilog &
 
 **EDA Playground link**: https://edaplayground.com/x/SGa6
 
-## Project Overview/Plan
-- UVM-based verification environment
-- APB agent (driver, monitor, sequencer, coverage)
-- Environment with scoreboard, coverage, model
-- Register access tests
-- Randomized stimulus
-- Built and simulated using EDA Playground
+## Project Overview / Plan
+
+This project demonstrates a **UVM-based verification environment** for an APB interface, developed as part of the Udemy course [Design Verification with SystemVerilog & UVM](https://www.udemy.com/course/design-verification-with-systemverilog-uvm/?couponCode=ACCAGE0923).
+
+Key components of the verification environment:
+
+- **APB Agent**: Includes driver, monitor, sequencer, and coverage collection.
+- **Environment**: Implements a scoreboard, functional model of the DUT, and coverage mechanisms.
+- **Register Access Verification**: Automatic register checks using UVM register model.
+- **Randomized Tests**: Stimulus generation to cover a wide range of scenarios.
+- **Simulation Platform**: Developed and simulated on **EDA Playground**.
+
+This project showcases step-by-step construction of a robust UVM environment, emphasizing agent creation, DUT verification, functional coverage, and test automation.
+
 
 ## Status
 Work in progress
