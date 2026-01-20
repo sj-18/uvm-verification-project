@@ -3,9 +3,9 @@
 This repository contains an ongoing SystemVerilog UVM verification
 environment developed as part of structured learning and upskilling.
 
-The EDA playground link has the latest code that can be simulated.
+The DUT used is provided in the course [Design Verification with SystemVerilog & UVM](https://www.udemy.com/course/design-verification-with-systemverilog-uvm/?couponCode=ACCAGE0923). The EDA playground link has the latest UVM testbench code that can be used for simulation and waveform observation.
 
-EDA Playground link: https://edaplayground.com/x/SGa6
+**EDA Playground link**: https://edaplayground.com/x/SGa6
 
 ## Project Overview/Plan
 - UVM-based verification environment
