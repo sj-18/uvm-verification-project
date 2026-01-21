@@ -7,8 +7,6 @@ module testbench();
   
   reg clk;
   
-  reg reset_n;
-  
   cfs_apb_if apb_if(.pclk(clk));
   
   initial begin
@@ -20,16 +18,18 @@ module testbench();
   end
   
   initial begin
-    reset_n = 1;
+    apb_if.preset_n = 1;
     #6ns;
-    reset_n = 0;  //Reset registers etc.
+    apb_if.preset_n = 0;  //Reset registers etc.
     #30ns;
-    reset_n = 1;
+    apb_if.preset_n = 1;
   end
   
   initial begin
     $dumpfile("dump.vcd");
     $dumpvars;
+    
+    uvm_config_db#(virtual cfs_apb_if)::set(null, "uvm_test_top.env.apb_agent", "vif", apb_if);
     
     run_test("");
   end
