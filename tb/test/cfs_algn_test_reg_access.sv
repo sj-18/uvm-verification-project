@@ -17,6 +17,10 @@ class cfs_algn_test_reg_access extends cfs_algn_test_base;
     for(int i=0; i<10; i++) begin
       cfs_apb_item_drv item = cfs_apb_item_drv::type_id::create("item");
       
+      void'(std::randomize(item));
+      
+      `uvm_info("DEBUG", $sformatf("[%0d] Item : %0s", i, item.convert2string()), UVM_LOW)
+      
     end
     
     `uvm_info("DEBUG", "end of test", UVM_LOW)
