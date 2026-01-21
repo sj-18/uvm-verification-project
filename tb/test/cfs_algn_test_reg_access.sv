@@ -14,6 +14,11 @@ class cfs_algn_test_reg_access extends cfs_algn_test_base;
     
     `uvm_info("DEBUG", "start of test", UVM_LOW)
     #100ns;
+    for(int i=0; i<10; i++) begin
+      cfs_apb_item_drv item = cfs_apb_item_drv::type_id::create("item");
+      
+    end
+    
     `uvm_info("DEBUG", "end of test", UVM_LOW)
     
     phase.drop_objection(this, "TEST_DONE");
