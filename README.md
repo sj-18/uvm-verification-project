@@ -7,6 +7,7 @@ The DUT is an aligner module that uses a standard AMBA 3 APB for register access
 The DUT design file used is provided in the course [Design Verification with SystemVerilog & UVM](https://www.udemy.com/course/design-verification-with-systemverilog-uvm/?couponCode=ACCAGE0923) and has hidden bugs. 
 
 The EDA playground link has the latest UVM testbench code that can be used for simulation and waveform observation.
+
 **EDA Playground link**: https://edaplayground.com/x/SGa6
 
 ## Project Overview / Plan
