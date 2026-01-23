@@ -25,24 +25,36 @@ Key components of the verification environment:
 This project showcases step-by-step construction of a robust UVM environment, emphasizing agent creation, DUT verification, functional coverage, and test automation.
 
 
-## Status
-***Work in progress.***
+## 📌 Status
+**Work in progress**
 
-**Work Done**-
-1. Created basic architecture of testbench.
-2. APB agent - 
-   a. Created APB agent(master) infrastructure.
-   b. Created APB driving item/sequence item.
-   c. Wrote code for sequencer-driver mechanism, creating 3 different sequences.
-   d. Updating driver to drive the APB signals on the interface.
+---
 
-**To do(overview)**-
-3. Build reusable UVM agents for Rx and Tx of the module
-4. Incorporate advanced UVM agent techniques
-5. UVM Register model
-6. Modelling and checking
-7. Debugging and Testing
-8. Clean up and wrap up
+## ✅ Work Done
+
+### 1. Testbench Architecture
+- Created basic architecture of the testbench.
+
+### 2. APB Agent (Master)
+- Created APB agent infrastructure.
+- Implemented APB driving item / sequence item.
+- Developed sequencer–driver mechanism.
+- Created three different sequences.
+- Currently updating driver to drive APB signals on the interface.
+
+---
+
+## 🔧 To Do (Overview)
+
+3. Build **reusable UVM agents** for **RX** and **TX** of the module  
+4. Incorporate **advanced UVM agent techniques**  
+5. Implement **UVM Register Model**  
+6. Functional **modelling and checking**  
+7. **Debugging and testing**  
+8. **Cleanup** and final wrap-up
+
+---
+
 
 ## Tools
 - SystemVerilog
