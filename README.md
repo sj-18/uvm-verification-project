@@ -26,7 +26,23 @@ This project showcases step-by-step construction of a robust UVM environment, em
 
 
 ## Status
-Work in progress
+***Work in progress.***
+
+**Work Done**-
+1. Created basic architecture of testbench.
+2. APB agent - 
+   a. Created APB agent(master) infrastructure.
+   b. Created APB driving item/sequence item.
+   c. Wrote code for sequencer-driver mechanism, creating 3 different sequences.
+   d. Updating driver to drive the APB signals on the interface.
+
+**To do(overview)**-
+3. Build reusable UVM agents for Rx and Tx of the module
+4. Incorporate advanced UVM agent techniques
+5. UVM Register model
+6. Modelling and checking
+7. Debugging and Testing
+8. Clean up and wrap up
 
 ## Tools
 - SystemVerilog
