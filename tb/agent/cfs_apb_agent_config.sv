@@ -11,16 +11,22 @@ class cfs_apb_agent_config extends uvm_component;
   //Virtual interface - set as local and access allowed only via setter and getter functions which allow us do some actions when field is set or get. Checks in setter and getter can help save debugging time.
   local cfs_apb_vif vif;
   
+  //Active/Passive agent flag with pre-defined UVM enum
+  local uvm_active_passive_enum active_passive;
+  
   function new(string name ="", uvm_component parent);
-    super.new(name, parent);    
+    super.new(name, parent);
+    
+    //Active agent by default
+    active_passive = UVM_ACTIVE;
   endfunction
   
-  //Getter
+  //vif Getter
   virtual function cfs_apb_vif get_vif();
     return vif;
   endfunction
     
-  //Setter
+  //vif Setter
   virtual function void set_vif(cfs_apb_vif value);
     //Check to ensure virtual interface is only set once
     if(vif == null) begin
@@ -32,7 +38,16 @@ class cfs_apb_agent_config extends uvm_component;
     end
   endfunction
   
-  
+  //active/passive getter
+  virtual function uvm_active_passive_enum get_active_passive();
+    return active_passive;
+  endfunction
+ 
+  //active/passive setter
+  virtual function void set_active_passive(uvm_active_passive_enum value);
+    active_passive = value;
+  endfunction
+ 
   virtual function void start_of_simulation_phase(uvm_phase phase);
     super.start_of_simulation_phase(phase);
     
