@@ -25,12 +25,11 @@ Key components of the verification environment:
 This project showcases step-by-step construction of a robust UVM environment, emphasizing agent creation, DUT verification, functional coverage, and test automation.
 
 
-## 📌 Status
-## 🚧 Work in Progress
+## Status
 
----
+***Work in Progress***
 
-## ✅ Work Done
+## Work Done
 
 ### 1. Testbench Architecture
 - [x] Created basic architecture of the testbench
