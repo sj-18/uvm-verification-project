@@ -8,6 +8,10 @@ class cfs_apb_agent extends uvm_agent;
   //Virtual interface instance to store the config_db get return value
   cfs_apb_vif vif;
   
+  //Handles for driver and sequencer
+  cfs_apb_sequencer sequencer;
+  cfs_apb_driver driver;
+  
   `uvm_component_utils(cfs_apb_agent)
   
   function new(string name ="", uvm_component parent);
@@ -18,6 +22,12 @@ class cfs_apb_agent extends uvm_agent;
     super.build_phase(phase);
     
     agent_config = cfs_apb_agent_config::type_id::create("agent_config", this);
+    
+    //If active agent
+    if(agent_config.get_active_passive() == UVM_ACTIVE) begin
+      sequencer = cfs_apb_sequencer::type_id::create("sequencer", this);
+      driver = cfs_apb_driver::type_id::create("driver", this);
+    end
   endfunction
   
   virtual function void connect_phase(uvm_phase phase);
@@ -30,6 +40,13 @@ class cfs_apb_agent extends uvm_agent;
     //Set the agent config using the setter
     else begin
       agent_config.set_vif(vif);
+    end
+    
+    //If active agent
+    if(agent_config.get_active_passive() == UVM_ACTIVE) begin
+      driver.seq_item_port.connect(sequencer.seq_item_export);
+      //Driver needs the vif and so on
+      driver.agent_config = agent_config;
     end
     
   endfunction
