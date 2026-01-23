@@ -26,34 +26,35 @@ This project showcases step-by-step construction of a robust UVM environment, em
 
 
 ## 📌 Status
-**Work in progress**
+## 🚧 Work in Progress
 
 ---
 
 ## ✅ Work Done
 
 ### 1. Testbench Architecture
-- Created basic architecture of the testbench.
+- [x] Created basic architecture of the testbench
 
 ### 2. APB Agent (Master)
-- Created APB agent infrastructure.
-- Implemented APB driving item / sequence item.
-- Developed sequencer–driver mechanism.
-- Created three different sequences.
-- Currently updating driver to drive APB signals on the interface.
+- [x] Created APB agent infrastructure
+- [x] Implemented APB driving item / sequence item
+- [x] Developed sequencer–driver mechanism
+- [x] Created three different sequences
+- [ ] Updating driver to drive APB signals on the interface
 
 ---
 
 ## 🔧 To Do (Overview)
 
-3. Build **reusable UVM agents** for **RX** and **TX** of the module  
-4. Incorporate **advanced UVM agent techniques**  
-5. Implement **UVM Register Model**  
-6. Functional **modelling and checking**  
-7. **Debugging and testing**  
-8. **Cleanup** and final wrap-up
+- [ ] Build **reusable UVM agents** for **RX** and **TX** of the module  
+- [ ] Incorporate **advanced UVM agent techniques**  
+- [ ] Implement **UVM Register Model**  
+- [ ] Functional **modelling and checking**  
+- [ ] **Debugging and testing**  
+- [ ] **Cleanup** and final wrap-up
 
 ---
+
 
 
 ## Tools
