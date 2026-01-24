@@ -13,14 +13,17 @@ class cfs_algn_test_reg_access extends cfs_algn_test_base;
     phase.raise_objection(this, "TEST_DONE");
     
     `uvm_info("DEBUG", "start of test", UVM_LOW)
-    #100ns;
+    #105ns;
     fork
       //Simple sequence
       begin
         cfs_apb_sequence_simple seq_simple = cfs_apb_sequence_simple::type_id::create("seq_simple");
 
         void'(seq_simple.randomize() with {
-          item.addr == 'h222;
+          //Address 0 corresponds to CTRL register
+          item.addr == 'h0;
+          item.dir == CFS_APB_WRITE;
+          item.data == 'h11;
         });
 
         seq_simple.start(env.apb_agent.sequencer);
@@ -32,7 +35,8 @@ class cfs_algn_test_reg_access extends cfs_algn_test_base;
 
         assert(seq_rw.randomize() with {
           //Not item.addr here as we have addr available publicly from that class
-          addr == 'h4;
+          //Address C corresponds to status register
+          addr == 'hC;
         });
 
         seq_rw.start(env.apb_agent.sequencer);
