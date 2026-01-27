@@ -2,10 +2,7 @@
  `define CFS_APB_ITEM_DRV_SV
 
 class cfs_apb_item_drv extends cfs_apb_item_base;
-  
-  rand cfs_apb_dir dir;
-  rand cfs_apb_data data;
-  rand cfs_apb_addr addr;
+
   rand int unsigned pre_drive_delay;
   rand int unsigned post_drive_delay;
   
@@ -24,7 +21,7 @@ class cfs_apb_item_drv extends cfs_apb_item_base;
   endfunction
   
   virtual function string convert2string();
-    string result = $sformatf("dir: %0s, addr: %0x", dir.name(), addr);
+    string result = super.convert2string();
     
     // Data only makes sense when we are ding an APB write
     if(dir == CFS_APB_WRITE) begin
