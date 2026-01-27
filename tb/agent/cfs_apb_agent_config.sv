@@ -14,11 +14,24 @@ class cfs_apb_agent_config extends uvm_component;
   //Active/Passive agent flag with pre-defined UVM enum
   local uvm_active_passive_enum active_passive;
   
+  //Switch to enable apb protocol checks
+  local bit has_checks;  
+  
+  //The max number of clock cycls we wait before declaring that the
+  //APB transfer is stuck and triggering an error
+  local int unsigned stuck_threshold;
+  
   function new(string name ="", uvm_component parent);
     super.new(name, parent);
     
     //Active agent by default
     active_passive = UVM_ACTIVE;
+    
+    //Enable the checks by default
+    has_checks = 1;
+    
+    //default value large enough
+    stuck_threshold = 1000;
   endfunction
   
   //vif Getter
@@ -32,6 +45,9 @@ class cfs_apb_agent_config extends uvm_component;
     if(vif == null) begin
       //Set the virtual interface
       vif = value;
+      
+      //When vif is set, set the has_checks bit as well
+      set_has_checks(get_has_checks());
     end
     else begin
       `uvm_fatal("ALGO ISSUE", "Trying to set the APB virtual interface more than once")
@@ -47,7 +63,37 @@ class cfs_apb_agent_config extends uvm_component;
   virtual function void set_active_passive(uvm_active_passive_enum value);
     active_passive = value;
   endfunction
+  
+  //has_checks getter
+  virtual function bit get_has_checks();
+    return has_checks;
+  endfunction
  
+  //has_checks setter
+  virtual function void set_has_checks(bit value);
+    has_checks = value;
+    
+    //synchronize the has_checks bit between the interface and the agent_config
+    if(vif != null) begin
+      vif.has_checks = has_checks;
+    end
+  endfunction
+ 
+  //stuck_threshold getter
+  virtual function int unsigned get_stuck_threshold();
+    return stuck_threshold;
+  endfunction
+  
+ //stuck_threshold setter
+  virtual function void set_stuck_threshold(int unsigned value);
+    if(stuck_threshold > 2) begin
+    stuck_threshold = value;
+    end else begin
+      `uvm_fatal("ALGO ISSUE", $sformatf("Tried to set stuck_threshold value less than 2 while minimum APB transfer length is 2"))
+    end
+  endfunction  
+  
+  
   virtual function void start_of_simulation_phase(uvm_phase phase);
     super.start_of_simulation_phase(phase);
     
@@ -60,6 +106,21 @@ class cfs_apb_agent_config extends uvm_component;
     end
     
   endfunction
+  
+  virtual task run_phase(uvm_phase phase);
+    //Ensure that virtual interface does not change has_checks
+    
+    forever begin
+      @(vif.has_checks);
+ 
+      //Throw an error if interface is changing has_checks
+      if(vif.has_checks != get_has_checks()) begin
+        `uvm_error("ALGO ISSUE", $sformatf("The has_checks bit cannot be changed from the interface, use %0s.set_has_checks() method", get_full_name()))
+      end
+    
+    end
+    
+  endtask
   
   
 endclass
