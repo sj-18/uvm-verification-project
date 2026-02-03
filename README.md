@@ -42,7 +42,8 @@ This project showcases step-by-step construction of a robust UVM environment, em
 - [x] Updated driver to drive APB signals on the interface
 - [x] Created monitor item and monitor class to collect DUT response
 - [x] Added assertions in the interface file for APB protocol checks
-- [ ] Implement coverage inside the APB agent
+- [x] Implemented coverage inside the APB agent
+- [ ] APB reset handling
 
 ---
 
