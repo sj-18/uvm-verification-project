@@ -8,10 +8,11 @@ class cfs_apb_agent extends uvm_agent;
   //Virtual interface instance to store the config_db get return value
   cfs_apb_vif vif;
   
-  //Handles for driver, sequencer and monitor
+  //Handles for driver, sequencer, monitor, coverage
   cfs_apb_sequencer sequencer;
   cfs_apb_driver driver;
   cfs_apb_monitor monitor;
+  cfs_apb_coverage coverage;
   
   `uvm_component_utils(cfs_apb_agent)
   
@@ -25,6 +26,11 @@ class cfs_apb_agent extends uvm_agent;
     agent_config = cfs_apb_agent_config::type_id::create("agent_config", this);
     
     monitor = cfs_apb_monitor::type_id::create("monitor", this);
+    
+    //If coverage enabled
+    if(agent_config.get_has_coverage()) begin
+      coverage = cfs_apb_coverage::type_id::create("coverage", this);
+    end
     
     //If active agent
     if(agent_config.get_active_passive() == UVM_ACTIVE) begin
@@ -51,6 +57,12 @@ class cfs_apb_agent extends uvm_agent;
       //Driver and monitor need the vif and so on
       driver.agent_config = agent_config;
       monitor.agent_config = agent_config;
+    end
+    
+    //If coverage enabled connect the analysis port from monitor to coverage
+    if(agent_config.get_has_coverage()) begin
+      monitor.output_port.connect(coverage.port_item);
+      coverage.agent_config = agent_config;
     end
     
   endfunction
