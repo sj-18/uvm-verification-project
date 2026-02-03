@@ -17,6 +17,9 @@ class cfs_apb_agent_config extends uvm_component;
   //Switch to enable apb protocol checks
   local bit has_checks;  
   
+  //Switch to enable coverage
+  local bit has_coverage; 
+  
   //The max number of clock cycls we wait before declaring that the
   //APB transfer is stuck and triggering an error
   local int unsigned stuck_threshold;
@@ -32,6 +35,9 @@ class cfs_apb_agent_config extends uvm_component;
     
     //default value large enough
     stuck_threshold = 1000;
+    
+    //deafult enable coverage
+    has_coverage = 1;
   endfunction
   
   //vif Getter
@@ -92,6 +98,18 @@ class cfs_apb_agent_config extends uvm_component;
       `uvm_fatal("ALGO ISSUE", $sformatf("Tried to set stuck_threshold value less than 2 while minimum APB transfer length is 2"))
     end
   endfunction  
+  
+  //has_coverage getter
+  virtual function bit get_has_coverage();
+    return has_coverage;
+  endfunction
+ 
+  //has_coverage setter
+  virtual function void set_has_coverage(bit value);
+    has_coverage = value;
+  endfunction
+  
+  
   
   
   virtual function void start_of_simulation_phase(uvm_phase phase);
