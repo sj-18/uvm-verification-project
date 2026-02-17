@@ -1,18 +1,44 @@
-# UVM Verification Project (Ongoing)
+# UVM Verification Project – APB-Based Aligner DUT
 
-This repository contains an ongoing SystemVerilog UVM verification
-environment developed as part of structured learning and upskilling.
+This project implements a complete UVM-based verification environment for a DUT featuring:
+- AMBA 3 APB interface for register access  
+- Custom valid/ready RX and TX interfaces
 
-The DUT is an aligner module that uses a standard AMBA 3 APB for register access. It has one Rx and one Tx interface which both use a custom valid/ready kind of protocol.
-The DUT design file used is provided in the course [Design Verification with SystemVerilog & UVM](https://www.udemy.com/course/design-verification-with-systemverilog-uvm/?couponCode=ACCAGE0923) and has hidden bugs. 
+The DUT contains intentional design bugs, and this environment is built to detect them using constrained-random verification, assertions, and functional coverage.
 
 The EDA playground link has the latest UVM testbench code that can be used for simulation and waveform observation.
 
 **EDA Playground link**: https://edaplayground.com/x/SGa6
 
-## Project Overview / Plan
+## How to Run
 
-This project demonstrates a **UVM-based verification environment** for an APB interface, developed as part of the Udemy course [Design Verification with SystemVerilog & UVM](https://www.udemy.com/course/design-verification-with-systemverilog-uvm/?couponCode=ACCAGE0923).
+1. Open the EDA Playground link:  
+   https://edaplayground.com/x/SGa6  
+
+2. Ensure that (should be selected as such by default):
+   - Simulator: Cadence Xcelium  
+   - UVM Version: 1.2
+   - Compile options : -timescale 1ns/1ns -sysv -coverage functional
+   - Run Options : -access +rw +UVM_TESTNAME=cfs_algn_test_reg_access +UVM_MAX_QUIT_COUNT=1  
+
+3. Run simulation  
+
+4. Observe:
+   - Waveforms (Ensure "Open EPWave after Run" is enabled for this) 
+   - UVM logs
+   - Assertion failures (if any)
+   - Coverage reports  
+
+## Key Learnings (so far)
+
+- UVM agent architecture and TLM communication  
+- Driving and monitoring APB protocol transactions  
+- Designing reusable verification components  
+- Writing assertions for protocol validation  
+- Building functional coverage models  
+- Handling reset and synchronization in UVM  
+
+## Project Overview / Plan
 
 Key components of the verification environment:
 
@@ -29,7 +55,7 @@ This project showcases step-by-step construction of a robust UVM environment, em
 
 ***Work in Progress***
 
-## Work Done
+## Work Log
 
 ### 1. Testbench Architecture
 - [x] Created basic architecture of the testbench
@@ -43,11 +69,11 @@ This project showcases step-by-step construction of a robust UVM environment, em
 - [x] Created monitor item and monitor class to collect DUT response
 - [x] Added assertions in the interface file for APB protocol checks
 - [x] Implemented coverage inside the APB agent
-- [ ] APB reset handling
+- [x] APB reset handling
 
 ---
 
-## 🔧 To Do (Overview)
+## 🔧 Future Enhancements / To do
 
 - [ ] Build **reusable UVM agents** for **RX** and **TX** of the module  
 - [ ] Incorporate **advanced UVM agent techniques**  
