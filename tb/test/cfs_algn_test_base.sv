@@ -1,8 +1,14 @@
+///////////////////////////////////////////////////////////////////////////////
+// Description: Test base class in which different tests are created. The
+//              environment instance is created inside this.
+///////////////////////////////////////////////////////////////////////////////
+
 `ifndef CFS_ALGN_TEST_BASE_SV
  `define CFS_ALGN_TEST_BASE_SV
 
 class cfs_algn_test_base extends uvm_test;
   
+  //Environemnt instance
   cfs_algn_env env;
   
   `uvm_component_utils(cfs_algn_test_base)
