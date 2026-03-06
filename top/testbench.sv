@@ -1,3 +1,7 @@
+///////////////////////////////////////////////////////////////////////////////
+// Description: Testbench top module. It contains the DUT //              instance and run_test() for UVM
+///////////////////////////////////////////////////////////////////////////////
+
 `include "cfs_algn_test_pkg.sv" 
 
 module testbench();
@@ -7,8 +11,10 @@ module testbench();
   
   reg clk;
   
+  //APB interface instance
   cfs_apb_if apb_if(.pclk(clk));
   
+  //Clock generation
   initial begin
     clk = 0;
     //10 ns clock
@@ -17,9 +23,10 @@ module testbench();
     end
   end
   
+  //Initial Reset
   initial begin
     apb_if.preset_n = 1;
-    #6ns;
+    #3ns;
     apb_if.preset_n = 0;  //Reset registers etc.
     #30ns;
     apb_if.preset_n = 1;
@@ -29,8 +36,10 @@ module testbench();
     $dumpfile("dump.vcd");
     $dumpvars;
     
+    //Set apb interface in the config_db
     uvm_config_db#(virtual cfs_apb_if)::set(null, "uvm_test_top.env.apb_agent", "vif", apb_if);
     
+    //Start UVM test
     run_test("");
   end
   
