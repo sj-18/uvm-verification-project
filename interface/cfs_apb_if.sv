@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////
+// Description: The APB interface file. It groups together the APB sigals. 
+//              SVA (SystemVerilog Assertions) are written here to check for 
+//              APB protocol compliance.
+///////////////////////////////////////////////////////////////////////////////
+
 `ifndef CFS_APB_IF_SV
  `define CFS_APB_IF_SV
 
@@ -29,10 +35,10 @@ interface cfs_apb_if(input pclk);
   
   logic pslverr;
   
-  //has_checks from cfs_apb_agent_config cannot be accessed directly here in the interface. We have logic inside the setter and getter of the has_checks to ensure the has_checks here and in the config are synchronized all the time
+  //has_checks from cfs_apb_agent_config cannot be accessed directly here in the interface. We have logic inside the setter and getter of the has_checks to ensure the has_checks here and in the config are synchronized all the time.
   bit has_checks;
   
-  //checks enabled by default
+  //checks enabled by default. If changing, change in cfs_apb_agent_config.sv as well.
   initial begin
     has_checks = 1;
   end
@@ -88,6 +94,7 @@ interface cfs_apb_if(input pclk);
   
   
   //Check that signals stay stable during the transfer when they should  
+    
   property pwrite_stable_at_access_phase_p;
     @(posedge pclk) disable iff(!preset_n || !has_checks)
     //$stable means it will check if signal value in the prev cycle and that in this cycle is the same. So it will check from the setup phase start.
@@ -122,6 +129,7 @@ interface cfs_apb_if(input pclk);
       
       
   //Assertions to check that signals do not have unknown values when not expected
+    
   property unknown_value_psel_p;
     @(posedge pclk) disable iff(!preset_n || !has_checks)
     //psel can never have an unknown value
