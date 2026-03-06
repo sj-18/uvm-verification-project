@@ -1,3 +1,8 @@
+///////////////////////////////////////////////////////////////////////////////
+// Description: The APB agent package. This can be reused in other projects as
+//              it is APB specification based and not specific to this DUT.
+///////////////////////////////////////////////////////////////////////////////
+
 `ifndef CFS_APB_PKG_SV
  `define CFS_APB_PKG_SV
 
@@ -13,6 +18,7 @@ import uvm_pkg::*;
 `include "cfs_apb_item_drv.sv"
 `include "cfs_apb_item_mon.sv"
 `include "cfs_apb_agent_config.sv"
+`include "cfs_apb_reset_handler.sv"
 `include "cfs_apb_sequencer.sv"
 `include "cfs_apb_coverage.sv"
 `include "cfs_apb_driver.sv"
