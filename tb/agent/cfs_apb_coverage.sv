@@ -1,3 +1,7 @@
+///////////////////////////////////////////////////////////////////////////////
+// Description: The APB coverage class. It collects and prints the coverage info.
+///////////////////////////////////////////////////////////////////////////////
+
 `ifndef CFS_APB_COVERAGE_SV
  `define CFS_APB_COVERAGE_SV
 
@@ -165,17 +169,11 @@ class cfs_apb_coverage extends uvm_component;
     
   endfunction
   
-  virtual task run_phase(uvm_phase phase);
+  virtual function void handle_reset(uvm_phase phase);
     cfs_apb_vif vif = agent_config.get_vif();
-    
-    //If reset occurs check if APB access ongoing
-    forever begin
-      @(negedge vif.preset_n);
       
-      cover_reset.sample(vif.psel);
-    end
-    
-  endtask  
+    cover_reset.sample(vif.psel);
+  endfunction  
   
   
   //NOTE : EDA Playground does not have a GUI to show coverage data. Hence, this function helps print some coverage info in the log. It is NOT needed if we have a vendor GUI available
