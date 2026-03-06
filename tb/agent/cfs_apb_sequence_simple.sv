@@ -1,3 +1,7 @@
+///////////////////////////////////////////////////////////////////////////////
+// Description: APB Simple sequence. This sends a simple driver item.
+///////////////////////////////////////////////////////////////////////////////
+
 `ifndef CFS_APB_SEQUENCE_SIMPLE_SV
  `define CFS_APB_SEQUENCE_SIMPLE_SV
 
@@ -17,6 +21,7 @@ class cfs_apb_sequence_simple extends cfs_apb_sequence_base;
     
 //     start_item(item);
 //     finish_item(item);
+    //No need to create and randomize here as we do that in the test class
     `uvm_send(item);
     
   endtask
