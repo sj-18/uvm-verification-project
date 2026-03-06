@@ -1,13 +1,24 @@
+///////////////////////////////////////////////////////////////////////////////
+// Description: The APB monitor class.
+//              1. It collects the transactions and broadcasts
+//              them on the analysis port(s).
+//              2. Threshold check on the APB transaction length
+//              3. Reset handling kills the collect_transactions process and restarts.
+///////////////////////////////////////////////////////////////////////////////
+
 `ifndef CFS_APB_MONITOR_SV
  `define CFS_APB_MONITOR_SV
 
-class cfs_apb_monitor extends uvm_monitor;
+class cfs_apb_monitor extends uvm_monitor implements cfs_apb_reset_handler;
   
   //Pointer to agent configuration
   cfs_apb_agent_config agent_config;
   
-  //uvm_analysis_port to broadcast the transaction from monitor
+  //uvm_analysis_port to broadcast the transaction from the monitor
   uvm_analysis_port#(cfs_apb_item_mon) output_port;
+  
+  //Process for collect_transactions
+  protected process process_collect_transactions;
   
   `uvm_component_utils(cfs_apb_monitor)
   
@@ -17,15 +28,35 @@ class cfs_apb_monitor extends uvm_monitor;
     output_port = new("output_port", this);
   endfunction
   
+  virtual task wait_reset_end();
+    agent_config.wait_reset_end();
+  endtask
   
+  //Similar implementation as driver, expect we collect the transaction here.
   virtual task run_phase(uvm_phase phase);
-    collect_transactions();
+    forever
+      begin
+        fork 
+          begin
+            wait_reset_end();
+            collect_transactions();
+
+            disable fork;
+          end
+       join
+      end
   endtask
   
   protected virtual task collect_transactions();
-    forever begin
-      collect_transaction();
-    end    
+    fork
+      begin
+        process_collect_transactions = process::self();
+        
+        forever begin
+          collect_transaction();
+        end    
+      end
+    join
   endtask
   
   protected virtual task collect_transaction();
@@ -80,6 +111,19 @@ class cfs_apb_monitor extends uvm_monitor;
     @(posedge vif.pclk);
     
   endtask
+        
+  //Function to handle the reset
+  virtual function void handle_reset(uvm_phase phase);
+
+  //Kill collect transactions
+  if(process_collect_transactions != null) begin
+  	process_collect_transactions.kill();
+
+  	process_collect_transactions = null;
+  end
+
+
+  endfunction
   
 endclass
 
