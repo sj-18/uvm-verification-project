@@ -1,3 +1,8 @@
+///////////////////////////////////////////////////////////////////////////////
+// Description: The APB agent configuration class.
+///////////////////////////////////////////////////////////////////////////////
+
+
 //Agent configuration kept separate so that can be passed as an object to wherever it is needed instead of passing individual fields
 
 `ifndef CFS_APB_AGENT_CONFIG_SV
@@ -8,7 +13,9 @@ class cfs_apb_agent_config extends uvm_component;
   
   `uvm_component_utils(cfs_apb_agent_config)
   
-  //Virtual interface - set as local and access allowed only via setter and getter functions which allow us do some actions when field is set or get. Checks in setter and getter can help save debugging time.
+  //Virtual interface(and other members in this class) - set as local and access allowed only via setter and getter functions
+  //which allow us do some actions(enforce rules) when field is set or get. Checks in setter and getter can help save debugging
+  //time.
   local cfs_apb_vif vif;
   
   //Active/Passive agent flag with pre-defined UVM enum
@@ -20,7 +27,7 @@ class cfs_apb_agent_config extends uvm_component;
   //Switch to enable coverage
   local bit has_coverage; 
   
-  //The max number of clock cycls we wait before declaring that the
+  //The max number of clock cycles we wait before declaring that the
   //APB transfer is stuck and triggering an error
   local int unsigned stuck_threshold;
   
@@ -30,7 +37,7 @@ class cfs_apb_agent_config extends uvm_component;
     //Active agent by default
     active_passive = UVM_ACTIVE;
     
-    //Enable the checks by default
+    //Enable the checks by default. If changing, change in cfs_apb_if.sv as well.
     has_checks = 1;
     
     //default value large enough
@@ -115,7 +122,7 @@ class cfs_apb_agent_config extends uvm_component;
   virtual function void start_of_simulation_phase(uvm_phase phase);
     super.start_of_simulation_phase(phase);
     
-    //Check to ensure virtual interface is available before calling run_phase()
+    //Check to ensure virtual interface is available before calling run_phase(). THis logic helps make debugging easier.
     if(get_vif() == null) begin
       `uvm_fatal("ALGO ISSUE","The APB virtual interface is not configured at \"Start of Simulation\" phase")
     end
@@ -140,6 +147,21 @@ class cfs_apb_agent_config extends uvm_component;
     
   endtask
   
+  //Task for waiting for async reset to start
+  virtual task wait_reset_start();
+  //Check if preset_n not 0 currently and wait for it to go to 0
+    if(vif.preset_n !== 0) begin
+      @(negedge vif.preset_n);
+    end
+  endtask
+  
+  //Task for waiting for reset to end at clock edge
+  virtual task wait_reset_end();
+    //Stay in loop till preset_n goes high at clock edge
+    while(vif.preset_n === 0) begin
+      @(posedge vif.pclk);
+    end
+  endtask
   
 endclass
 
