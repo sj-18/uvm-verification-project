@@ -1,8 +1,14 @@
+///////////////////////////////////////////////////////////////////////////////
+// Description: The APB item base class. Driver and monitor item common components
+//              are placed here.
+///////////////////////////////////////////////////////////////////////////////
+
 `ifndef CFS_APB_ITEM_BASE_SV
  `define CFS_APB_ITEM_BASE_SV
 
 
 //shall include driver and monitor driving items
+//common items between the two are placed here
 class cfs_apb_item_base extends uvm_sequence_item;
     
   rand cfs_apb_dir dir;
@@ -15,7 +21,7 @@ class cfs_apb_item_base extends uvm_sequence_item;
     super.new(name);
   endfunction
   
-    virtual function string convert2string();
+  virtual function string convert2string();
     string result = $sformatf("dir: %0s, addr: %0x", dir.name(), addr);
     
     return result;
