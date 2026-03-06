@@ -1,3 +1,7 @@
+///////////////////////////////////////////////////////////////////////////////
+// Description: The APB driver sequence item. 
+///////////////////////////////////////////////////////////////////////////////
+
 `ifndef CFS_APB_ITEM_DRV_SV
  `define CFS_APB_ITEM_DRV_SV
 
@@ -6,6 +10,7 @@ class cfs_apb_item_drv extends cfs_apb_item_base;
   rand int unsigned pre_drive_delay;
   rand int unsigned post_drive_delay;
   
+  //Soft constraints on pre drive and post drive delays
   constraint pre_drive_delay_default{
     soft pre_drive_delay <=5;
   }
@@ -20,6 +25,7 @@ class cfs_apb_item_drv extends cfs_apb_item_base;
     super.new(name);
   endfunction
   
+  //This function is explicitly called to print out the driver item data
   virtual function string convert2string();
     string result = super.convert2string();
     
