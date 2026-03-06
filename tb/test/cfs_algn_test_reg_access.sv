@@ -1,3 +1,8 @@
+///////////////////////////////////////////////////////////////////////////////
+// Description: Register access test. Targets APB accesses to DUT registers.
+//              This test includes 3 different sequences.
+///////////////////////////////////////////////////////////////////////////////
+
 `ifndef CFS_ALGN_TEST_REG_ACCESS
  `define CFS_ALGN_TEST_REG_ACCESS
 
@@ -14,18 +19,44 @@ class cfs_algn_test_reg_access extends cfs_algn_test_base;
     
     `uvm_info("DEBUG", "start of test", UVM_LOW)
     #105ns;
+    
+    //Reset logic and 3 different sequences in the fork....join
     fork
+      
+      //Reset after 3 APB transfers in middle of APB transfer to check reset handling
+      begin
+        cfs_apb_vif vif = env.apb_agent.agent_config.get_vif();
+        
+        repeat(3) begin
+          @(posedge vif.psel);
+        end
+        
+        #11ns;
+        
+        vif.preset_n <= 0;
+        
+        repeat(4) begin
+          @(posedge vif.pclk);
+        end
+        
+        vif.preset_n <= 1;
+      end
+      
       //Simple sequence
       begin
+        
+        //Step 1 Create the sequence
         cfs_apb_sequence_simple seq_simple = cfs_apb_sequence_simple::type_id::create("seq_simple");
 
+        // Step 2 Randomize the sequence, here we also have in-line randomization using "with" keyword
         void'(seq_simple.randomize() with {
           //Address 0 corresponds to CTRL register
           item.addr == 'h0;
-          item.dir == CFS_APB_WRITE;
+          item.dir  == CFS_APB_WRITE;
           item.data == 'h11;
         });
 
+        //Step 3 Start the sequence
         seq_simple.start(env.apb_agent.sequencer);
       end
 
@@ -55,18 +86,19 @@ class cfs_algn_test_reg_access extends cfs_algn_test_base;
 
       end
     join
-    /*
-    for(int i=0; i<10; i++) begin
-      cfs_apb_item_drv item = cfs_apb_item_drv::type_id::create("item");
-      
-      //Using item.randomize() over std randomize helps include pre_randomize and post_randomize methods if needed
-      //void'(std::randomize(item));
-      void'(item.randomize());
-      
-      `uvm_info("DEBUG", $sformatf("[%0d] Item : %0s", i, item.convert2string()), UVM_LOW)
-   
-    end
-    */
+    
+    //After reset, the sequencer is empty as per our reset handling and this goes in.
+      begin
+        cfs_apb_sequence_random seq_random = cfs_apb_sequence_random::type_id::create("seq_random");
+
+        void'(seq_random.randomize() with {
+          num_items == 3;
+        });
+
+        seq_random.start(env.apb_agent.sequencer);
+
+      end
+    
     
     `uvm_info("DEBUG", "end of test", UVM_LOW)
     
@@ -77,4 +109,4 @@ class cfs_algn_test_reg_access extends cfs_algn_test_base;
 endclass
 
 
-`endif
+`endif- Clean-up + Comments
