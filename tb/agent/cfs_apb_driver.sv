@@ -1,45 +1,67 @@
+///////////////////////////////////////////////////////////////////////////////
+// Description: The APB driver class. 
+//              1. Drives the signals on to the DUT
+//              based on the sequence items it receives via the sequencer.
+//              2. Reset handling kills the drive_transactions process and restarts.
+///////////////////////////////////////////////////////////////////////////////
+
 `ifndef CFS_APB_DRIVER_SV
  `define CFS_APB_DRIVER_SV
 
-class cfs_apb_driver extends uvm_driver#(.REQ(cfs_apb_item_drv));
+class cfs_apb_driver extends uvm_driver#(.REQ(cfs_apb_item_drv)) implements cfs_apb_reset_handler;
   
   cfs_apb_agent_config agent_config;
+  
+  //Process for drive_transactions() task - pointer to it
+  protected process process_drive_transactions;
   
   `uvm_component_utils(cfs_apb_driver)
   
   function new(string name = "", uvm_component parent);
     super.new(name, parent);    
   endfunction
-  
+    
+  virtual task wait_reset_end();
+    agent_config.wait_reset_end();
+  endtask
   
   virtual task run_phase(uvm_phase phase);
-    drive_transactions();
+    forever begin
+      fork 
+        begin
+          wait_reset_end();
+          drive_transactions();
+          
+          //This will execute when drive_transactions is killed.
+          //This in turn will kill the fork and the forever loop restarts the drive_transactions as it is in a forever loop
+          disable fork;
+        end
+      join
+    end
   endtask
 
-  
+  //"protected virtual" means only sub-classes can override
   protected virtual task drive_transactions();
-    //We could use uvm_config_db, but usage of that is better kept minimal in run_phase() to avoid performance issues. 
-    cfs_apb_vif vif = agent_config.get_vif();
     
-    //Reset (use non-blocking statements to avoid race conditions) 
-    vif.psel    <= 0;
-    vif.penable <= 0;
-    vif.pwrite  <= 0;
-    vif.paddr   <= 0;
-    vif.pwdata  <= 0;
-    
-    repeat(5) @(posedge vif.pclk);
-    
-    //Drive transactions after reset
-    forever begin
-      cfs_apb_item_drv item;
-      seq_item_port.get_next_item(item);
-      
-      drive_transaction(item);
+    fork
+      begin     
+        //Process of drive transactions for reset handling
+        process_drive_transactions = process::self();
+        
+        //Drive transactions after reset
+        forever begin
+          cfs_apb_item_drv item;
+          
+          //seq_item_port is in-built
+          seq_item_port.get_next_item(item);
 
-      seq_item_port.item_done();
+          drive_transaction(item);
 
-    end  
+          seq_item_port.item_done();
+
+        end  
+      end
+    join
   endtask
   
   
@@ -48,6 +70,7 @@ class cfs_apb_driver extends uvm_driver#(.REQ(cfs_apb_item_drv));
     
     cfs_apb_vif vif = agent_config.get_vif();
     
+    //Print the item info using convert2string
     `uvm_info("DEBUG", $sformatf("Driving \"%s\" : %s", item.get_full_name(), item.convert2string()) ,UVM_NONE);
     
     //Pre_drive delay before the APB transaction
@@ -91,6 +114,29 @@ class cfs_apb_driver extends uvm_driver#(.REQ(cfs_apb_item_drv));
     end
     
   endtask
+
+  //Function to handle the reset
+  virtual function void handle_reset(uvm_phase phase);
+    //We could use uvm_config_db, but usage of that is better kept minimal in run_phase() to avoid performance issues. 
+    cfs_apb_vif vif = agent_config.get_vif();
+
+    //Kill drive transactions
+    if(process_drive_transactions != null) begin
+      process_drive_transactions.kill();
+      
+      process_drive_transactions = null;
+    end
+    
+    //Reset (use non-blocking statements to avoid race conditions) 
+    vif.psel    <= 0;
+    vif.penable <= 0;
+    vif.pwrite  <= 0;
+    vif.paddr   <= 0;
+    vif.pwdata  <= 0;
+    
+    
+  endfunction
+  
   
 endclass
 
