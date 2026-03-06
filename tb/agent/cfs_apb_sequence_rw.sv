@@ -1,3 +1,7 @@
+///////////////////////////////////////////////////////////////////////////////
+// Description: APB Read Write sequence. This sends a read followed by a write.
+///////////////////////////////////////////////////////////////////////////////
+
 `ifndef CFS_APB_SEQUENCE_RW_SV
  `define CFS_APB_SEQUENCE_RW_SV
 
@@ -18,6 +22,7 @@ class cfs_apb_sequence_rw extends cfs_apb_sequence_base;
     //such that we cannot access item directly from test class as there we want only addr and data to be accessible
     cfs_apb_item_drv item;
     
+    //uvm_do_with allows for inline constraints
     //Read
     `uvm_do_with(item, {
       dir == CFS_APB_READ;
@@ -30,7 +35,7 @@ class cfs_apb_sequence_rw extends cfs_apb_sequence_base;
       dir == CFS_APB_WRITE;
       //addr of the item we are randomizing = addr value in this class
       addr == local::addr;
-      data == wr_data;
+      data == wr_data;    
     });
    
   endtask
